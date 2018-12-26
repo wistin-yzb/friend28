@@ -74,7 +74,8 @@ $shortstring = base64_encode($jsonarr);
 	}
 </style>
 	<script src="http://ip.ws.126.net/ipquery" charset="utf-8"></script>
-	<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>	
+	<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>		
+	<script>document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {WeixinJSBridge.call('hideOptionMenu');});</script>
 	<script>
         (function (window, document, Math) {
             var rAF = window.requestAnimationFrame	||
