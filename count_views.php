@@ -124,8 +124,8 @@ $domain = "http://".$d1_domain;
             <tr class="tr1">            
                 <td>朋友圈：<?php echo $sum1;?></td>
                 <td>微信群：<?php echo $sum2;?></td>
-                <td><a href="<?php echo $domain;?>/r.php">查看</a>
-                <a href="<?php echo $domain;?>/r.php?auto=1">自动</a>
+                <td><a href="./r.php">查看</a>
+                <a href="./r.php?auto=1">自动</a>
                 </td>
             </tr>    
         </tbody>
@@ -133,7 +133,7 @@ $domain = "http://".$d1_domain;
 </div>
    <script>
    <?php if($auto == 1):?>
-	setTimeout("document.location.href = '<?php echo $domain;?>/r.php?auto=1'",10 * 1000);
+	setTimeout("document.location.href = './r.php?auto=1'",10 * 1000);
 	<?php elseif($auto == 3):?>
 	setTimeout("document.location.href = ''",3 * 1000);
 	<?php endif;?>

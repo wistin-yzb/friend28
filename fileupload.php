@@ -1,56 +1,56 @@
 <?php
 class FileUpload {
 
-    private $filePath;     //Ö¸¶¨ÉÏ´«ÎÄ¼ş±£´æµÄÂ·¾¶
-    private $allowType=array('gif', 'jpg', 'png', 'jpeg', 'txt');  //³äĞíÉÏ´«ÎÄ¼şµÄÀàĞÍ
-    private $maxSize=1000000;  //ÔÊÉÏ´«ÎÄ¼şµÄ×î´ó³¤¶È 1M
-    private $isRandName=true;  //ÊÇ·ñËæ»úÖØÃüÃû£¬ true false²»Ëæ»ú£¬Ê¹ÓÃÔ­ÎÄ¼şÃû
-    private $originName;   //Ô´ÎÄ¼şÃû³Æ
-    private $tmpFileName;   //ÁÙÊ±ÎÄ¼şÃû
-    private $fileType;  //ÎÄ¼şÀàĞÍ
-    private $fileSize;  //ÎÄ¼ş´óĞ¡
-    private $newFileName; //ĞÂÎÄ¼şÃû
-    private $errorNum=0;  //´íÎóºÅ
-    private $errorMess=""; //ÓÃÀ´Ìá¹©´íÎó±¨¸æ
+    private $filePath;     //æŒ‡å®šä¸Šä¼ æ–‡ä»¶ä¿å­˜çš„è·¯å¾„
+    private $allowType=array('gif', 'jpg', 'png', 'jpeg', 'txt');  //å……è®¸ä¸Šä¼ æ–‡ä»¶çš„ç±»å‹
+    private $maxSize=1000000;  //å…ä¸Šä¼ æ–‡ä»¶çš„æœ€å¤§é•¿åº¦ 1M
+    private $isRandName=true;  //æ˜¯å¦éšæœºé‡å‘½åï¼Œ true falseä¸éšæœºï¼Œä½¿ç”¨åŸæ–‡ä»¶å
+    private $originName;   //æºæ–‡ä»¶åç§°
+    private $tmpFileName;   //ä¸´æ—¶æ–‡ä»¶å
+    private $fileType;  //æ–‡ä»¶ç±»å‹
+    private $fileSize;  //æ–‡ä»¶å¤§å°
+    private $newFileName; //æ–°æ–‡ä»¶å
+    private $errorNum=0;  //é”™è¯¯å·
+    private $errorMess=""; //ç”¨æ¥æä¾›é”™è¯¯æŠ¥å‘Š
 
 
 
-    //ÓÃÓÚ¶ÔÉÏ´«ÎÄ¼ş³õÊ¹»¯
-    //1. Ö¸¶¨ÉÏ´«Â·¾¶£¬ 2£¬³äĞíµÄÀàĞÍ£¬ 3£¬ÏŞÖÆ´óĞ¡£¬ 4£¬ÊÇ·ñÊ¹ÓÃËæ»úÎÄ¼şÃû³Æ
-    //ÈÃÓÃ»§¿ÉÒÔ²»ÓÃ°´Î»ÖÃ´«²ÎÊı£¬ºóÃæ²ÎÊı¸øÖµ²»ÓÃ½«Ç°¼¸¸ö²ÎÊıÒ²Ìá¹©Öµ
+    //ç”¨äºå¯¹ä¸Šä¼ æ–‡ä»¶åˆä½¿åŒ–
+    //1. æŒ‡å®šä¸Šä¼ è·¯å¾„ï¼Œ 2ï¼Œå……è®¸çš„ç±»å‹ï¼Œ 3ï¼Œé™åˆ¶å¤§å°ï¼Œ 4ï¼Œæ˜¯å¦ä½¿ç”¨éšæœºæ–‡ä»¶åç§°
+    //è®©ç”¨æˆ·å¯ä»¥ä¸ç”¨æŒ‰ä½ç½®ä¼ å‚æ•°ï¼Œåé¢å‚æ•°ç»™å€¼ä¸ç”¨å°†å‰å‡ ä¸ªå‚æ•°ä¹Ÿæä¾›å€¼
     function __construct($options=array()){
         foreach($options as $key=>$val){
-            //²é¿´ÓÃ»§²ÎÊıÖĞÊı×éµÄÏÂ±êÊÇ·ñºÍ³ÉÔ±ÊôĞÔÃûÏàÍ¬
+            //æŸ¥çœ‹ç”¨æˆ·å‚æ•°ä¸­æ•°ç»„çš„ä¸‹æ ‡æ˜¯å¦å’Œæˆå‘˜å±æ€§åç›¸åŒ
             if(!in_array($key,get_class_vars(get_class($this)))){
                 continue;
             }
-            //ÉèÖÃ³ÉÔ±±äÁ¿
+            //è®¾ç½®æˆå‘˜å˜é‡
             $this->setOption($key, $val);
         }
     }
 
 
-    //»ñµÃ´íÎóÔ­Òò
+    //è·å¾—é”™è¯¯åŸå› 
     private function getError(){
-        //»ñµÃ´íÎóÔ­Òò
-        $str="ÉÏ´«ÎÄ¼ş<font color='red'>{$this->originName}</font>Ê±³ö´í£º";
+        //è·å¾—é”™è¯¯åŸå› 
+        $str="ä¸Šä¼ æ–‡ä»¶<font color='red'>{$this->originName}</font>æ—¶å‡ºé”™ï¼š";
         switch($this->errorNum){
-            case 4: $str .= "Ã»ÓĞÎÄ¼ş±»ÉÏ´«"; break;
-            case 3: $str .= "ÎÄ¼şÖ»±»²¿·ÖÉÏ´«"; break;
-            case 2: $str .= "ÉÏ´«ÎÄ¼ş³¬¹ıÁËHTML±íµ¥ÖĞMAX_FILE_SIZEÑ¡ÏîÖ¸¶¨µÄÖµ"; break;
-            case 1: $str .= "ÉÏ´«ÎÄ¼ş³¬¹ıÁËphp.ini ÖĞupload_max_filesizeÑ¡ÏîµÄÖµ"; break;
-            case -1: $str .= "²»±»³äĞíµÄÀàĞÍ"; break;
-            case -2: $str .= "ÎÄ¼ş¹ı´ó£¬ÉÏ´«ÎÄ¼ş²»ÄÜ³¬¹ı{$this->maxSize}¸ö×Ö½Ú"; break;
-            case -3: $str .= "ÉÏ´«Ê§°Ü"; break;
-            case -4: $str .= "½¨Á¢´æ·ÅÉÏ´«ÎÄ¼şÄ¿Â¼Ê§°Ü£¬ÇëÖØĞÂÖ¸¶¨ÉÏ´«Ä¿Â¼"; break;
-            case -5: $str .= "±ØĞëÖ¸¶¨ÉÏ´«ÎÄ¼şµÄÂ·¾¶"; break;
-            default: $str .=  "Ä©Öª´íÎó";
+            case 4: $str .= "æ²¡æœ‰æ–‡ä»¶è¢«ä¸Šä¼ "; break;
+            case 3: $str .= "æ–‡ä»¶åªè¢«éƒ¨åˆ†ä¸Šä¼ "; break;
+            case 2: $str .= "ä¸Šä¼ æ–‡ä»¶è¶…è¿‡äº†HTMLè¡¨å•ä¸­MAX_FILE_SIZEé€‰é¡¹æŒ‡å®šçš„å€¼"; break;
+            case 1: $str .= "ä¸Šä¼ æ–‡ä»¶è¶…è¿‡äº†php.ini ä¸­upload_max_filesizeé€‰é¡¹çš„å€¼"; break;
+            case -1: $str .= "ä¸è¢«å……è®¸çš„ç±»å‹"; break;
+            case -2: $str .= "æ–‡ä»¶è¿‡å¤§ï¼Œä¸Šä¼ æ–‡ä»¶ä¸èƒ½è¶…è¿‡{$this->maxSize}ä¸ªå­—èŠ‚"; break;
+            case -3: $str .= "ä¸Šä¼ å¤±è´¥"; break;
+            case -4: $str .= "å»ºç«‹å­˜æ”¾ä¸Šä¼ æ–‡ä»¶ç›®å½•å¤±è´¥ï¼Œè¯·é‡æ–°æŒ‡å®šä¸Šä¼ ç›®å½•"; break;
+            case -5: $str .= "å¿…é¡»æŒ‡å®šä¸Šä¼ æ–‡ä»¶çš„è·¯å¾„"; break;
+            default: $str .=  "æœ«çŸ¥é”™è¯¯";
         }
         return $str.'<br>';
     }
 
 
-    //ÓÃÀ´¼ì²éÎÄ¼şÉÏ´«Â·¾¶
+    //ç”¨æ¥æ£€æŸ¥æ–‡ä»¶ä¸Šä¼ è·¯å¾„
     private function checkFilePath(){
         if(empty($this->filePath)) {
             $this->setOption('errorNum', -5);
@@ -65,7 +65,7 @@ class FileUpload {
         return true;
     }
 
-    //ÓÃÀ´¼ì²éÎÄ¼şÉÏ´«µÄ´óĞ¡
+    //ç”¨æ¥æ£€æŸ¥æ–‡ä»¶ä¸Šä¼ çš„å¤§å°
     private function checkFileSize() {
         if($this->fileSize > $this->maxSize){
             $this->setOPtion('errorNum', '-2');
@@ -75,7 +75,7 @@ class FileUpload {
         }
     }
 
-    //ÓÃÓÚ¼ì²éÎÄ¼şÉÏ´«ÀàĞÍ
+    //ç”¨äºæ£€æŸ¥æ–‡ä»¶ä¸Šä¼ ç±»å‹
     private function checkFileType() {
         if(in_array(strtolower($this->fileType), $this->allowType)) {
             return true;
@@ -85,7 +85,7 @@ class FileUpload {
         }
     }
 
-    //ÉèÖÃÉÏ´«ºóµÄÎÄ¼şÃû³Æ
+    //è®¾ç½®ä¸Šä¼ åçš„æ–‡ä»¶åç§°
     private function setNewFileName(){
         if($this->isRandName){
             $this->setOption('newFileName', $this->proRandName());
@@ -95,41 +95,41 @@ class FileUpload {
     }
 
 
-    //ÉèÖÃËæ»úÎÄ¼şÃû³Æ
+    //è®¾ç½®éšæœºæ–‡ä»¶åç§°
     private function proRandName(){
         $fileName=date("YmdHis").rand(100,999);
         return $fileName.'.'.$this->fileType;
     }
 
-    //ÉèÖÃ³ÉÔ±±äÁ¿
+    //è®¾ç½®æˆå‘˜å˜é‡
     private function setOption($key, $val){
         $this->$key=$val;
     }
 
-    //ÓÃÀ´ÉÏ´«Ò»¸öÎÄ¼ş
+    //ç”¨æ¥ä¸Šä¼ ä¸€ä¸ªæ–‡ä»¶
     function uploadFile($fileField){
-        //Ä¬ÈÏ·µ»ØÖµÎªTrue
+        //é»˜è®¤è¿”å›å€¼ä¸ºTrue
         $return=true;
-        //Ê×ÏÈ¼ì²éÎÄ¼şÉÏ´«Â·¾¶
+        //é¦–å…ˆæ£€æŸ¥æ–‡ä»¶ä¸Šä¼ è·¯å¾„
         if(!$this->checkFilePath()){
             $this->errorMess=$this->getError();
             return false;
         }
 
-        //»ñµÃÉÏ´«ÎÄ¼şµÄÃû×Ö
+        //è·å¾—ä¸Šä¼ æ–‡ä»¶çš„åå­—
         $name=$_FILES[$fileField]['name'];
-        //»ñµÃÁÙÊ±ÎÄ¼şÃû
+        //è·å¾—ä¸´æ—¶æ–‡ä»¶å
         $tmp_name=$_FILES[$fileField]['tmp_name'];
-        //»ñµÃÉÏ´«ÎÄ¼şµÄ´óĞ¡
+        //è·å¾—ä¸Šä¼ æ–‡ä»¶çš„å¤§å°
         $size=$_FILES[$fileField]['size'];
-        //»ñµÃÉÏ´«´íÎó´úºÅ
+        //è·å¾—ä¸Šä¼ é”™è¯¯ä»£å·
         $error=$_FILES[$fileField]['error'];
 
-        //Èç¹ûÉÏ´«µÄÊÇ¶à¸öÎÄ¼ş
+        //å¦‚æœä¸Šä¼ çš„æ˜¯å¤šä¸ªæ–‡ä»¶
         if(is_Array($name)){
-            //´íÎó´úºÅ±ØĞëÒ²ÊÇArray£¬ÒòÎªÒ»¸öÎÄ¼ş¶ÔÓ¦Ò»¸ö´íÎó´úºÅ
+            //é”™è¯¯ä»£å·å¿…é¡»ä¹Ÿæ˜¯Arrayï¼Œå› ä¸ºä¸€ä¸ªæ–‡ä»¶å¯¹åº”ä¸€ä¸ªé”™è¯¯ä»£å·
             $errors=array();
-            //±éÀú¼ì²éÎÄ¼ş
+            //éå†æ£€æŸ¥æ–‡ä»¶
             for($i=0; $i<count($name); $i++){
                 if($this->setFiles($name[$i], $tmp_name[$i], $size[$i], $error[$i])){
                     if(!$this->checkFileSize() || !$this->checkFileType()){
@@ -156,13 +156,13 @@ class FileUpload {
                         }
                     }
                 }
-                //ÊÇÒ»¸öÊı×é
+                //æ˜¯ä¸€ä¸ªæ•°ç»„
                 $this->newFileName=$fileNames;
             }
-            //¸³Öµ´íÎóĞÅÏ¢
+            //èµ‹å€¼é”™è¯¯ä¿¡æ¯
             $this->errorMess=$errors;
             return $return;
-            //Èç¹ûÊÇµ¥¸öÎÄ¼şÉÏ´«
+            //å¦‚æœæ˜¯å•ä¸ªæ–‡ä»¶ä¸Šä¼ 
         } else {
             if($this->setFiles($name, $tmp_name, $size, $error)){
                 if($this->checkFileSize() && $this->checkFileType()){
@@ -187,7 +187,7 @@ class FileUpload {
         }
     }
 
-    //±£´æÎÄ¼ş,½«ÎÄ¼ş´ÓÁÙÊ±Â·¾¶ÒÆ¶¯µ½ĞÂÂ·¾¶
+    //ä¿å­˜æ–‡ä»¶,å°†æ–‡ä»¶ä»ä¸´æ—¶è·¯å¾„ç§»åŠ¨åˆ°æ–°è·¯å¾„
     private function copyFile(){
         if(!$this->errorNum){
             $filePath=rtrim($this->filePath, '/').'/';
@@ -205,7 +205,7 @@ class FileUpload {
         }
     }
 
-    //ÉèÖÃºÍ$_FILESÓĞ¹ØµÄÄÚÈİ
+    //è®¾ç½®å’Œ$_FILESæœ‰å…³çš„å†…å®¹
     private function setFiles($name="", $tmp_name='', $size=0, $error=0){
 
         $this->setOption('errorNum', $error);
@@ -214,28 +214,28 @@ class FileUpload {
         }
         $this->setOption('originName', $name);
         $this->setOption('tmpFileName', $tmp_name);
-        //·Ö¸îÎÄ¼şÃû£¬È¡×îºóÒ»¸öºó×º
+        //åˆ†å‰²æ–‡ä»¶åï¼Œå–æœ€åä¸€ä¸ªåç¼€
         $arrStr=explode('.', $name);
         $this->setOption('fileType', strtolower($arrStr[count($arrStr)-1]));
         $this->setOption('fileSize', $size);
         return true;
     }
 
-    //ÓÃÓÚ»ñÈ¡ÉÏ´«ºóÎÄ¼şµÄÎÄ¼şÃû
+    //ç”¨äºè·å–ä¸Šä¼ åæ–‡ä»¶çš„æ–‡ä»¶å
     function getNewFileName(){
         return $this->newFileName;
     }
 
-    //ÉÏ´«Èç¹ûÊ§°Ü£¬Ôòµ÷ÓÃÕâ¸ö·½·¨£¬¾Í¿ÉÒÔ²é¿´´íÎó±¨¸æ
+    //ä¸Šä¼ å¦‚æœå¤±è´¥ï¼Œåˆ™è°ƒç”¨è¿™ä¸ªæ–¹æ³•ï¼Œå°±å¯ä»¥æŸ¥çœ‹é”™è¯¯æŠ¥å‘Š
     function getErrorMsg() {
         return $this->errorMess;
     }
 
 }
-//ÊµÀı»¯Õâ¸ö¶ÔÏó
+//å®ä¾‹åŒ–è¿™ä¸ªå¯¹è±¡
 $up=new FileUpload(array('isRandName'=>false,'allowType'=>array('txt'),'filePath'=>'./', 'maxSize'=>200000,'isRandName'=>false));
 echo '<pre>';
-//µ÷ÓÃÉÏ´«ÎÄ¼şµÄ·½·¨
+//è°ƒç”¨ä¸Šä¼ æ–‡ä»¶çš„æ–¹æ³•
 if($up->uploadFile('file')){
     print_r($up->getNewFileName());
 }else{
