@@ -267,7 +267,7 @@ $shortstring = $base64arr . "&t=" . $time;
     }
 
     .three .box-group3 {
-        background: url('/img/addeff023434vg456.jpg') no-repeat;
+        background: url('/img/34asdfdsfdfert34987543579rtg456gfr.jpg') no-repeat;
         background-size: 100% 100%;
         width: 3.5rem;
         height: 3.98rem;
@@ -283,7 +283,7 @@ $shortstring = $base64arr . "&t=" . $time;
     }
 
     .three .box-group5 {
-        background: url('/img/45gbffbvfv9dfv90090ertyuuiijk87.jpg') no-repeat;
+        background: url('/img/17468049361057765114fm26gp0.jpg') no-repeat;
         background-size: 100% 100%;
         width: 3.5rem;
         height: 4.54rem;
