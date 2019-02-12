@@ -7,6 +7,7 @@ include('include.php');
 $auto = get('auto');
 
 $json = file_get_contents('r.txt');
+
 if($json != '')
 {
 	$arr = json_decode($json,true);
@@ -98,7 +99,7 @@ for($i = 0; $i <= $len; $i ++)
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<title>分享统计 - <?php echo date('H:i:s',time());?></title>
-	<script type="text/javascript" src="http://www.wncwk.cn./common/js/ichart.1.2.min.js"></script>
+	<script type="text/javascript" src="./js/ichart.1.2.min.js"></script>
 	<script type="text/javascript" src="./js/jquery.min.js"></script>
 	<style type="text/css">
 		.canvas{padding:5px;float:left;}
